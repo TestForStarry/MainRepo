@@ -41,7 +41,7 @@ function InitRepo() {
 		fi
 		if [ "${RepoBranch}" == "null" ] || [ -z "${RepoBranch}" ]; then
 			echo "Warning: RepoBranch is empty or null, use master as default!"
-			RepoBranch="master"
+			RepoBranch="main"
 		fi
 		if [ -z ${RepoPath} ]; then
 			RepoPath=${RepoName}
