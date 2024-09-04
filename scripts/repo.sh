@@ -39,7 +39,10 @@ function InitRepo() {
 			echo "Error: RepoName or RepoUrl is empty!"
 			exit 1
 		fi
-		
+		if [ "${RepoBranch}" == "null" ] || [ -z "${RepoBranch}" ]; then
+			echo "Warning: RepoBranch is empty or null, use master as default!"
+			RepoBranch="master"
+		fi
 		if [ -z ${RepoPath} ]; then
 			RepoPath=${RepoName}
 		fi
