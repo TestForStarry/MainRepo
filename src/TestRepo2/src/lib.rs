@@ -1,3 +1,3 @@
 pub fn test2() {
-    println!("Test file from Repo2");
+    println!("Test file2 from Repo2");
 }
