@@ -1,0 +1,12 @@
+[
+	{
+		"name": "TestRepo1",
+		"url": "git@github.com:TestForStarry/TestRepo1.git",
+		"localPath": "src/TestRepo1"
+	},
+	{
+		"name": "TestRepo2",
+		"url": "git@github.com:TestForStarry/TestRepo2.git",
+		"localPath": "src/TestRepo2"
+	}
+]
