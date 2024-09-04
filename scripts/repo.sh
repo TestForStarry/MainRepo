@@ -14,17 +14,49 @@ function InitRepoConfig() {
 	fi
 }
 
-local RepoName=""
-local RepoPath=""
-local RepoFile="./scripts/repo.json"
+RepoName=""
+RepoPath=""
+RepoFile="./scripts/repo.json"
 if [ ! -f ${RepoFile} ]; then
 	echo "Error: repo.json file not found!"
 	exit 1
 fi
-local JsonData=$(cat ${RepoFile} | jq -c '.[]')
-local RepoConfigFile=""
+JsonData=$(cat ${RepoFile} | jq -c '.[]')
+RepoConfigFile=""
+
+function InitRepo() {
+	local RepoBranch=""
+	local RepoUrl=""
+	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
+		_jq() {
+			echo ${row} | base64 --decode | jq -r ${1}
+		}
+		RepoName=$(_jq '.name')
+		RepoUrl=$(_jq '.url')
+		RepoBranch=$(_jq '.branch')
+		RepoPath=$(_jq '.localPath')
+		if [ -z ${RepoName} ] || [ -z ${RepoUrl} ]; then
+			echo "Error: RepoName or RepoUrl is empty!"
+			exit 1
+		fi
+		
+		if [ -z ${RepoPath} ]; then
+			RepoPath=${RepoName}
+		fi
+		
+		git subrepo clone -b ${RepoBranch} ${RepoUrl} ${RepoPath}
+		if [ $? -ne 0 ]; then
+			echo "Error: git clone -b ${RepoBranch} ${RepoUrl} ${RepoPath} failed!"
+			exit 1
+		fi
+
+	done
+}
+
+InitRepo
+
 # Load .gitrepo files in SubReposConfig to local integral repository
-function loadRepo() {
+function LoadRepoConfig() {
 	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
 		_jq() {
 			echo ${row} | base64 --decode | jq -r ${1}
@@ -32,7 +64,7 @@ function loadRepo() {
 		RepoName=$(_jq '.name')
 		RepoPath=$(_jq '.localPath')
 		if [ -z ${RepoName} ]; then
-			echo "Error: RepoName or RepoUrl is empty!"
+			echo "Error: RepoName is empty!"
 			exit 1
 		fi
 		
@@ -50,7 +82,7 @@ function loadRepo() {
 }
 
 # Commit changes in .gitrepo files in the local integral repo and push to remote repository
-function updateRepo()
+function UpdateRepoConfig()
 {	
 	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
 		_jq() {
@@ -59,7 +91,7 @@ function updateRepo()
 		RepoName=$(_jq '.name')
 		RepoPath=$(_jq '.localPath')
 		if [ -z ${RepoName} ]; then
-			echo "Error: RepoName or RepoUrl is empty!"
+			echo "Error: RepoName is empty!"
 			exit 1
 		fi
 		
