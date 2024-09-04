@@ -6,7 +6,7 @@
 [subrepo]
 	remote = git@github.com:TestForStarry/TestRepo2.git
 	branch = main
-	commit = 43253d477da333019c617a9cc5dc89afa46275e9
-	parent = 47a79acfe1474e066ae438ec4e7c2d5477e73063
+	commit = 164fc2e2f03e7108c1724a003f4af36cc04f2159
+	parent = 2a2cf247e3ca72c4924aace2b5badfd21a8c5f6c
 	method = merge
 	cmdver = 0.4.9
