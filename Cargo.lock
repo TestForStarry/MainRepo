@@ -5,3 +5,17 @@ version = 3
 [[package]]
 name = "MainRepo"
 version = "0.1.0"
+dependencies = [
+ "TestRepo1",
+ "TestRepo2",
+]
+
+[[package]]
+name = "TestRepo1"
+version = "0.1.0"
+source = "git+https://github.com/TestForStarry/TestRepo1.git#aed6f85b4dc0bb686f932806c6b07ec2ee423ead"
+
+[[package]]
+name = "TestRepo2"
+version = "0.1.0"
+source = "git+https://github.com/TestForStarry/TestRepo2.git#43253d477da333019c617a9cc5dc89afa46275e9"

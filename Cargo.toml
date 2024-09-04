@@ -4,3 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+test_repo1 = { git = "https://github.com/TestForStarry/TestRepo1.git", package = "TestRepo1" }
+test_repo2 = { git = "https://github.com/TestForStarry/TestRepo2.git", package = "TestRepo2" }
