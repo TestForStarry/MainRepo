@@ -16,7 +16,7 @@ function InitRepoConfig() {
 
 RepoName=""
 RepoPath=""
-RepoFile="./scripts/repo.json"
+RepoFile="./scripts/build/repo.json"
 if [ ! -f ${RepoFile} ]; then
 	echo "Error: repo.json file not found!"
 	exit 1
@@ -56,8 +56,6 @@ function InitRepo() {
 	done
 }
 
-InitRepo
-
 # Load .gitrepo files in SubReposConfig to local integral repository
 function LoadRepoConfig() {
 	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
@@ -87,6 +85,15 @@ function LoadRepoConfig() {
 # Commit changes in .gitrepo files in the local integral repo and push to remote repository
 function UpdateRepoConfig()
 {	
+	# Store the initial commit hash for integral repository
+	local PARENT_COMMIT_HASH=$1
+	# Push the changes in sub repository to remote
+	git subrepo pull -a
+	if [ $? -ne 0 ]; then
+		echo "Error: git subrepo pull -a failed!"
+		exit 1
+	fi
+	
 	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
 		_jq() {
 			echo ${row} | base64 --decode | jq -r ${1}
@@ -104,10 +111,14 @@ function UpdateRepoConfig()
 
 		# collect .gitrepo files in local integral repository to the targetConfigPath
 		RepoConfigFile="./${RepoPath}/.gitrepo"
+		# Check the RepoConfig File and replace the `parent` file with the PARENT_COMMIT_HASH
 		if [ ! -f ${RepoConfigFile} ]; then
 			echo "Error: ${RepoConfigFile} not found!"
 			exit 1
 		fi
+
+		sed -i "s/parent.*/parent: ${PARENT_COMMIT_HASH}/" ${RepoConfigFile}
+
 		cp ${RepoConfigFile} ${targetConfigPath}/.gitrepo.${RepoName}
 	done
 
