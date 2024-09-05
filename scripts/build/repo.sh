@@ -2,7 +2,7 @@
 
 targetConfigPath="/tmp/SubReposConfig"
 
-function InitRepoConfig() {
+function CloneRepoConfig() {
 	SubReposConfigUrl="git@github.com:TestForStarry/SubRepos.git"
 
 	# Pull SubReposConfig from remote repository
@@ -24,7 +24,7 @@ fi
 JsonData=$(cat ${RepoFile} | jq -c '.[]')
 RepoConfigFile=""
 
-function InitRepo() {
+function CloneRepo() {
 	local RepoBranch=""
 	local RepoUrl=""
 	for row in $(echo ${JsonData} | jq -r '. | @base64'); do
@@ -88,9 +88,9 @@ function UpdateRepoConfig()
 	# Store the initial commit hash for integral repository
 	local PARENT_COMMIT_HASH=$1
 	# Push the changes in sub repository to remote
-	git subrepo pull -a
+	git subrepo push -a
 	if [ $? -ne 0 ]; then
-		echo "Error: git subrepo pull -a failed!"
+		echo "Error: git subrepo push -a failed!"
 		exit 1
 	fi
 	
