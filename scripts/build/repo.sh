@@ -87,7 +87,7 @@ function LoadRepoConfig() {
 function UpdateRepoConfig()
 {	
 	# Store the initial commit hash for integral repository
-	local PARENT_COMMIT_HASH=$1
+	local PARENT_COMMIT_HASH=$(git log -1 --pretty=%H | head -n 1)
 	# Push the changes in sub repository to remote
 	git subrepo push -a
 	if [ $? -ne 0 ]; then
