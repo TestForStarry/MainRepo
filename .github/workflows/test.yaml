@@ -33,11 +33,5 @@ jobs:
         ssh-private-key: ${{ secrets.SSH_KEY }}
     - name: Enable git-subrepo subcommands
       run: git clone https://github.com/ingydotnet/git-subrepo /tmp/git-subrepo 
-        
     - name: Synchronize with remote terminal modules
-      run: |
-        source /tmp/git-subrepo/.rc
-        source ./scripts/build/repo.sh
-        CloneRepoConfig
-        LoadRepoConfig
-        UpdateRepoConfig
+      run: ./scripts/build/sync.sh ${{github.actor}} ${{github.actor_id}}
