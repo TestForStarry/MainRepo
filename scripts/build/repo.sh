@@ -37,12 +37,13 @@ function CloneRepo() {
 		RepoPath=$(_jq '.localPath')
 		if [ -z ${RepoName} ] || [ -z ${RepoUrl} ]; then
 			echo "Error: RepoName or RepoUrl is empty!"
-			exit 1
+			# exit 1
 		fi
-		if [ "${RepoBranch}" == "null" ] || [ -z "${RepoBranch}" ]; then
+		if [ -z "${RepoBranch}" ]; then
 			echo "Warning: RepoBranch is empty or null, use master as default!"
 			RepoBranch="main"
 		fi
+
 		if [ -z ${RepoPath} ]; then
 			RepoPath=${RepoName}
 		fi
@@ -50,7 +51,7 @@ function CloneRepo() {
 		git subrepo clone -b ${RepoBranch} ${RepoUrl} ${RepoPath}
 		if [ $? -ne 0 ]; then
 			echo "Error: git clone -b ${RepoBranch} ${RepoUrl} ${RepoPath} failed!"
-			exit 1
+			# exit 1
 		fi
 
 	done
@@ -66,7 +67,7 @@ function LoadRepoConfig() {
 		RepoPath=$(_jq '.localPath')
 		if [ -z ${RepoName} ]; then
 			echo "Error: RepoName is empty!"
-			exit 1
+			# exit 1
 		fi
 		
 		if [ -z ${RepoPath} ]; then
@@ -75,7 +76,7 @@ function LoadRepoConfig() {
 		RepoConfigFile="${targetConfigPath}/.gitrepo.${RepoName}"
 		if [ ! -f ${RepoConfigFile} ]; then
 			echo "Error: ${RepoConfigFile} not found!"
-			exit 1
+			# exit 1
 		fi
 		cp ${RepoConfigFile} ./${RepoPath}/.gitrepo
 	done
